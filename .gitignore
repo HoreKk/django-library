@@ -1,2 +1,3 @@
 sent_emails
-**/__pycache__/*.pyc
+*.pyc
+__pycache__/

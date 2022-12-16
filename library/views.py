@@ -18,7 +18,6 @@ def register_request(request):
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={ "register_form": form })
 
-
 class BookListView(ListView):
 	model = Book
 	template_name = 'back/list_books.html'
@@ -32,21 +31,10 @@ class BookCreateView(CreateView):
 	model = Book
 	fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
 	template_name = 'back/edit_book.html'
-	redirect = 'book_list'
+	success_url = '/books'
 
 class BookUpdateView(UpdateView):
 	model = Book
 	fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
 	template_name = 'back/edit_book.html'
-	redirect = 'book_list'
-
-def create_book(request):
-	if request.method == "POST":
-		form = BookForm(request.POST)
-		if form.is_valid():
-			form.save()
-			messages.success(request, "Book created." )
-			return redirect("list_books")
-		messages.error(request, "Invalid fields.")
-	form = BookForm()
-	return render (request=request, template_name="back/create_book.html", context={ "create_book_form": form })
+	success_url = '/books'
