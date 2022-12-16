@@ -1,0 +1,45 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold">Books of library "{{ user.library.name }}"</h1>
+
+<div class="mt-6">
+  <a href="{% url 'book_create' %}" class="btn btn-primary">
+    Add book
+  </a>
+</div>
+
+<div class="mt-8 overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
+  <table class="min-w-full divide-y divide-gray-200 text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        {% for field in book_fields %}
+          {% if field != 'loan' and field != 'library' %}
+            <th class="px-4 py-2 text-left font-medium text-gray-900">{{ field | capfirst }}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="px-4 py-2 text-left font-medium text-gray-900">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for book in object_list %}
+        <tr>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ book.id }}</th>
+          <td class="px-4 py-2 text-gray-700">{{ book.title }}</td>
+          <td class="px-4 py-2 text-gray-700">{{ book.author }}</td>
+          <td class="px-4 py-2 text-gray-700">{{ book.editor }}</td>
+          <td class="px-4 py-2 text-gray-700">{{ book.collection }}</td>
+          <td class="px-4 py-2 text-gray-700">{{ book.genre }}</td>
+          <td class="px-4 py-2 text-gray-700">
+            <a href="{% url 'book_detail' book.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

@@ -24,5 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path("accounts/register/", views.register_request, name="register"),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'), # new
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('books', views.BookListView.as_view(), name='book_list'),
+    path('book', views.BookCreateView.as_view(), name='book_create'),
+    path('book/<slug:pk>', views.BookUpdateView.as_view(), name='book_detail'),
 ]
