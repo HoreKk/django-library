@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from .models import Book
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.base import TemplateView
 
 def register_request(request):
 	if request.method == "POST":
@@ -18,7 +20,11 @@ def register_request(request):
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={ "register_form": form })
 
-class BookListView(ListView):
+
+class HomeView(LoginRequiredMixin, TemplateView):
+	template_name = 'home.html'
+
+class BookListView(LoginRequiredMixin, ListView):
 	model = Book
 	template_name = 'back/list_books.html'
 
@@ -27,13 +33,13 @@ class BookListView(ListView):
 		context['book_fields'] = [f.name for f in Book._meta.get_fields()]
 		return context
 
-class BookCreateView(CreateView):
+class BookCreateView(LoginRequiredMixin, CreateView):
 	model = Book
 	fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
 	template_name = 'back/edit_book.html'
 	success_url = '/books'
 
-class BookUpdateView(UpdateView):
+class BookUpdateView(LoginRequiredMixin, UpdateView):
 	model = Book
 	fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
 	template_name = 'back/edit_book.html'

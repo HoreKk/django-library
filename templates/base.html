@@ -31,6 +31,11 @@
                     Books
                   </a>
                 </li>
+                <li>
+                  <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'logout' %}">
+                    Logout
+                  </a>
+                </li>
               </ul>
             </nav>
     
@@ -60,15 +65,12 @@
         </div>
       </div>
     </header>
-    <main>
-      <div class="container mx-auto py-6">
-        {% block content %}
-        {% endblock %}
-      </div>
-    </main>
-  {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
   {% endif %}
+  <main>
+    <div class="container mx-auto py-6">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </main>
 </body>
 </html>
