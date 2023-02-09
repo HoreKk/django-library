@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load tailwind_filters %}
+
+{% block content %}   
+
+  <div class="mb-3">
+    <a href="{% url 'genre_list' %}" class="inline-block btn btn-secondary">
+      <svg
+        class="h-5 w-5"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M14 5l7 7m0 0l-7 7m7-7H3"
+          transform="rotate(180 12 12)"
+        />
+      </svg>
+    </a>
+  </div>
+
+  <h1 class="text-xl font-bold text-gray-900 mb-4">
+    {{ form.instance.pk| yesno:"Edit , Create " }} Genre
+  </h1>
+  <form method="post">{% csrf_token %}
+    {{ form | crispy }}
+    <input type="submit" class="btn btn-primary mt-3" value="{{ form.instance.pk| yesno:"Update , Create " }}">
+  </form>
+
+{% endblock %}

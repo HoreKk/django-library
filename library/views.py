@@ -63,6 +63,7 @@ class BookDeleteView(LoginRequiredMixin, DeleteView):
 	model = Book
 	success_url = reverse_lazy('book_list')
 
+
 # Authors CRUD
 class AuthorListView(UserPassesTestMixin, ListView):
 	model = Author
@@ -92,6 +93,7 @@ class AuthorDeleteView(LoginRequiredMixin, DeleteView):
 	model = Author
 	success_url = reverse_lazy('author_list')
 
+
 # Editors CRUD
 class EditorListView(UserPassesTestMixin, ListView):
 	model = Editor
@@ -120,3 +122,63 @@ class EditorUpdateView(LoginRequiredMixin, UpdateView):
 class EditorDeleteView(LoginRequiredMixin, DeleteView):
 	model = Editor
 	success_url = reverse_lazy('editor_list')
+
+
+# Collections CRUD
+class CollectionListView(UserPassesTestMixin, ListView):
+	model = Collection
+	template_name = 'back/collections/list.html'
+
+	def test_func(self):
+		return self.request.user.library is not None
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['collection_fields'] = [f.name for f in Collection._meta.get_fields()]
+		return context
+
+class CollectionCreateView(LoginRequiredMixin, CreateView):
+	model = Collection
+	fields = ['name', 'color']
+	template_name = 'back/collections/edit.html'
+	success_url = '/collections'
+
+class CollectionUpdateView(LoginRequiredMixin, UpdateView):
+	model = Collection
+	fields = ['name', 'color']
+	template_name = 'back/collections/edit.html'
+	success_url = '/collections'
+
+class CollectionDeleteView(LoginRequiredMixin, DeleteView):
+	model = Collection
+	success_url = reverse_lazy('collection_list')
+
+
+# Collections CRUD
+class GenreListView(UserPassesTestMixin, ListView):
+	model = Genre
+	template_name = 'back/genres/list.html'
+
+	def test_func(self):
+		return self.request.user.library is not None
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['genre_fields'] = [f.name for f in Genre._meta.get_fields()]
+		return context
+
+class GenreCreateView(LoginRequiredMixin, CreateView):
+	model = Genre
+	fields = ['name']
+	template_name = 'back/genres/edit.html'
+	success_url = '/genres'
+
+class GenreUpdateView(LoginRequiredMixin, UpdateView):
+	model = Genre
+	fields = ['name']
+	template_name = 'back/genres/edit.html'
+	success_url = '/genres'
+
+class GenreDeleteView(LoginRequiredMixin, DeleteView):
+	model = Genre
+	success_url = reverse_lazy('genre_list')
