@@ -4,10 +4,11 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from .models import Book
+from .models import Book, Library
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import get_object_or_404
 
 def register_request(request):
 	if request.method == "POST":
@@ -39,12 +40,17 @@ class BookListView(UserPassesTestMixin, ListView):
 
 class BookCreateView(LoginRequiredMixin, CreateView):
 	model = Book
-	fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
+	fields = ['title', 'author', 'editor', 'collection', 'genre']
 	template_name = 'back/edit_book.html'
 	success_url = '/books'
 
+	def form_valid(self, form):
+		library = get_object_or_404(Library, name=self.request.user.library)
+		form.instance.library = library
+		return super(BookCreateView, self).form_valid(form)
+
 class BookUpdateView(LoginRequiredMixin, UpdateView):
 	model = Book
-	fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
+	fields = ['title', 'author', 'editor', 'collection', 'genre']
 	template_name = 'back/edit_book.html'
 	success_url = '/books'
