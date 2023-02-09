@@ -1,14 +1,16 @@
 from django.shortcuts import  render, redirect
-from .forms import NewUserForm, BookForm
+from .forms import NewUserForm
 from django.contrib.auth import login
 from django.contrib import messages
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from .models import Book, Library
+from .models import Book, Library, Author, Editor, Collection, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+
 
 def register_request(request):
 	if request.method == "POST":
@@ -26,9 +28,11 @@ def register_request(request):
 class HomeView(LoginRequiredMixin, TemplateView):
 	template_name = 'home.html'
 
+
+# Books CRUD
 class BookListView(UserPassesTestMixin, ListView):
 	model = Book
-	template_name = 'back/list_books.html'
+	template_name = 'back/books/list.html'
 
 	def test_func(self):
 		return self.request.user.library is not None
@@ -41,7 +45,7 @@ class BookListView(UserPassesTestMixin, ListView):
 class BookCreateView(LoginRequiredMixin, CreateView):
 	model = Book
 	fields = ['title', 'author', 'editor', 'collection', 'genre']
-	template_name = 'back/edit_book.html'
+	template_name = 'back/books/edit.html'
 	success_url = '/books'
 
 	def form_valid(self, form):
@@ -52,5 +56,67 @@ class BookCreateView(LoginRequiredMixin, CreateView):
 class BookUpdateView(LoginRequiredMixin, UpdateView):
 	model = Book
 	fields = ['title', 'author', 'editor', 'collection', 'genre']
-	template_name = 'back/edit_book.html'
+	template_name = 'back/books/edit.html'
 	success_url = '/books'
+
+class BookDeleteView(LoginRequiredMixin, DeleteView):
+	model = Book
+	success_url = reverse_lazy('book_list')
+
+# Authors CRUD
+class AuthorListView(UserPassesTestMixin, ListView):
+	model = Author
+	template_name = 'back/authors/list.html'
+
+	def test_func(self):
+		return self.request.user.library is not None
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['author_fields'] = [f.name for f in Author._meta.get_fields()]
+		return context
+
+class AuthorCreateView(LoginRequiredMixin, CreateView):
+	model = Author
+	fields = ['first_name', 'last_name']
+	template_name = 'back/authors/edit.html'
+	success_url = '/authors'
+
+class AuthorUpdateView(LoginRequiredMixin, UpdateView):
+	model = Author
+	fields = ['first_name', 'last_name']
+	template_name = 'back/authors/edit.html'
+	success_url = '/authors'
+
+class AuthorDeleteView(LoginRequiredMixin, DeleteView):
+	model = Author
+	success_url = reverse_lazy('author_list')
+
+# Editors CRUD
+class EditorListView(UserPassesTestMixin, ListView):
+	model = Editor
+	template_name = 'back/editors/list.html'
+
+	def test_func(self):
+		return self.request.user.library is not None
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['editor_fields'] = [f.name for f in Author._meta.get_fields()]
+		return context
+
+class EditorCreateView(LoginRequiredMixin, CreateView):
+	model = Editor
+	fields = ['first_name', 'last_name']
+	template_name = 'back/editors/edit.html'
+	success_url = '/editors'
+
+class EditorUpdateView(LoginRequiredMixin, UpdateView):
+	model = Editor
+	fields = ['first_name', 'last_name']
+	template_name = 'back/editors/edit.html'
+	success_url = '/editors'
+
+class EditorDeleteView(LoginRequiredMixin, DeleteView):
+	model = Editor
+	success_url = reverse_lazy('editor_list')

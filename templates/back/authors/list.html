@@ -1,0 +1,48 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold">Authors</h1>
+
+<div class="mt-6">
+  <a href="{% url 'author_create' %}" class="btn btn-primary">
+    Add author
+  </a>
+</div>
+
+<div class="mt-8 overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
+  <table class="min-w-full divide-y divide-gray-200 text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        {% for field in author_fields %}
+          {% if field != 'book' %}
+            <th class="px-4 py-2 text-left font-medium text-gray-900">{{ field | capfirst }}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="px-4 py-2 text-left font-medium text-gray-900">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for author in object_list %}
+        <tr>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ author.id }}</th>
+          <td class="px-4 py-2 text-gray-700">{{ author.first_name }}</td>
+          <td class="px-4 py-2 text-gray-700">{{ author.last_name }}</td>
+          <td class="flex gap-3 px-4 py-2 text-gray-700">
+            <a href="{% url 'author_detail' author.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
+            <form method="POST" action="{% url 'author_delete' author.id %}">
+              {% csrf_token %}
+              <button type="submit" class="text-sm font-medium text-red-600 hover:underline">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
