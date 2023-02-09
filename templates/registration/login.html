@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load tailwind_filters %}
+
 {% block content %}
 
 {% if form.errors %}
@@ -16,23 +18,18 @@
 {% endif %}
 
 <form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
+    {% csrf_token %}
+    {{ form | crispy }} 
 
-<input type="submit" value="login">
-<input type="hidden" name="next" value="{{ next }}">
+    <div class="flex items-center gap-6">
+        <button class="btn btn-primary" type="submit">Login</button>
+        <p><a href="{% url 'register' %}">Your not registered yet ?</a></p>
+        <p><a href="{% url 'password_reset' %}">Lost password ?</a></p>
+    </div>
+
+    <input type="hidden" name="next" value="{{ next }}">
 </form>
 
-{# Assumes you set up the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+
 
 {% endblock %}

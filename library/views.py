@@ -7,6 +7,7 @@ from django.views.generic.list import ListView
 from .models import Book
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 def register_request(request):
 	if request.method == "POST":
@@ -24,9 +25,12 @@ def register_request(request):
 class HomeView(LoginRequiredMixin, TemplateView):
 	template_name = 'home.html'
 
-class BookListView(LoginRequiredMixin, ListView):
+class BookListView(UserPassesTestMixin, ListView):
 	model = Book
 	template_name = 'back/list_books.html'
+
+	def test_func(self):
+		return self.request.user.library is not None
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

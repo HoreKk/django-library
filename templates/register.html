@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
+{% load tailwind_filters %}
+
 {% block content %}      
 
 <!--Register--> 
 <div class="container py-5">
-	<h1>Register</h1>
 	<form method="POST">
 		{% csrf_token %}
-		{{ register_form }}                    
-		<button class="btn btn-primary" type="submit">Register</button>
+		{{ register_form | crispy }}
+		<div class="flex items-center gap-6">
+			<button class="btn btn-primary" type="submit">Register</button>
+			<a href="{% url 'login' %}">Already have an account ?</a>
+		</div>
 	</form>
-	<p class="text-center">If you already have an account instead.</p>
 </div>
 
 {% endblock %}
