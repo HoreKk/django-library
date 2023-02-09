@@ -7,7 +7,7 @@
 <h1 class="text-3xl font-bold">Editors</h1>
 
 <div class="mt-6">
-  <a href="{% url 'editor_create' %}" class="btn btn-primary">
+  <a href="{% url 'lib_editor_create' %}" class="btn btn-primary">
     Add editor
   </a>
 </div>
@@ -31,8 +31,8 @@
           <td class="px-4 py-2 text-gray-700">{{ editor.first_name }}</td>
           <td class="px-4 py-2 text-gray-700">{{ editor.last_name }}</td>
           <td class="flex gap-3 px-4 py-2 text-gray-700">
-            <a href="{% url 'editor_detail' editor.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
-            <form method="POST" action="{% url 'editor_delete' editor.id %}">
+            <a href="{% url 'lib_editor_detail' editor.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
+            <form method="POST" action="{% url 'lib_editor_delete' editor.id %}">
               {% csrf_token %}
               <button type="submit" class="text-sm font-medium text-red-600 hover:underline">
                 Delete

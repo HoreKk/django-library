@@ -7,7 +7,7 @@
 <h1 class="text-3xl font-bold">Collections</h1>
 
 <div class="mt-6">
-  <a href="{% url 'collection_create' %}" class="btn btn-primary">
+  <a href="{% url 'lib_collection_create' %}" class="btn btn-primary">
     Add collection
   </a>
 </div>
@@ -31,8 +31,8 @@
           <td class="px-4 py-2 text-gray-700">{{ collection.name }}</td>
           <td class="px-4 py-2 text-gray-700">{{ collection.color }}</td>
           <td class="flex gap-3 px-4 py-2 text-gray-700">
-            <a href="{% url 'collection_detail' collection.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
-            <form method="POST" action="{% url 'collection_delete' collection.id %}">
+            <a href="{% url 'lib_collection_detail' collection.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
+            <form method="POST" action="{% url 'lib_collection_delete' collection.id %}">
               {% csrf_token %}
               <button type="submit" class="text-sm font-medium text-red-600 hover:underline">
                 Delete

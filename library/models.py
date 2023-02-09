@@ -38,7 +38,7 @@ class Library(models.Model):
     return self.name
 
 class CustomUser(AbstractUser):
-  library = models.ForeignKey(Library, on_delete=models.CASCADE, null=True)
+  library = models.ForeignKey(Library, on_delete=models.CASCADE, blank=True, null=True)
 
 class Book(models.Model):
   title = models.CharField(max_length=100)

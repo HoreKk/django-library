@@ -91,7 +91,7 @@ class AuthorUpdateView(LoginRequiredMixin, UpdateView):
 
 class AuthorDeleteView(LoginRequiredMixin, DeleteView):
 	model = Author
-	success_url = reverse_lazy('author_list')
+	success_url = reverse_lazy('lib_author_list')
 
 
 # Editors CRUD
@@ -121,7 +121,7 @@ class EditorUpdateView(LoginRequiredMixin, UpdateView):
 
 class EditorDeleteView(LoginRequiredMixin, DeleteView):
 	model = Editor
-	success_url = reverse_lazy('editor_list')
+	success_url = reverse_lazy('lib_editor_list')
 
 
 # Collections CRUD
@@ -151,7 +151,7 @@ class CollectionUpdateView(LoginRequiredMixin, UpdateView):
 
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):
 	model = Collection
-	success_url = reverse_lazy('collection_list')
+	success_url = reverse_lazy('lib_collection_list')
 
 
 # Collections CRUD
@@ -181,4 +181,4 @@ class GenreUpdateView(LoginRequiredMixin, UpdateView):
 
 class GenreDeleteView(LoginRequiredMixin, DeleteView):
 	model = Genre
-	success_url = reverse_lazy('genre_list')
+	success_url = reverse_lazy('lib_genre_list')
