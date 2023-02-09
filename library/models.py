@@ -3,6 +3,13 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 
+class Author(models.Model):
+  first_name = models.CharField(max_length=100)
+  last_name = models.CharField(max_length=100)
+
+  def __str__(self):
+    return self.first_name + ' ' + self.last_name
+
 class Editor(models.Model):
   first_name = models.CharField(max_length=100)
   last_name = models.CharField(max_length=100)
@@ -35,7 +42,7 @@ class CustomUser(AbstractUser):
 
 class Book(models.Model):
   title = models.CharField(max_length=100)
-  author = models.CharField(max_length=100)
+  author = models.ForeignKey(Author, on_delete=models.CASCADE)
   editor = models.ForeignKey(Editor, on_delete=models.CASCADE)
   collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
   genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
@@ -84,6 +91,7 @@ class Session(models.Model):
   def __str__(self):
     return self.reading_group.name + '-' + self.date
 
+admin.site.register(Author)
 admin.site.register(Editor)
 admin.site.register(Collection)
 admin.site.register(Genre)
