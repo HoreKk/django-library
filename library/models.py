@@ -11,11 +11,10 @@ class Author(models.Model):
     return self.first_name + ' ' + self.last_name
 
 class Editor(models.Model):
-  first_name = models.CharField(max_length=100)
-  last_name = models.CharField(max_length=100)
+  name = models.CharField(max_length=100)
 
   def __str__(self):
-    return self.first_name + ' ' + self.last_name
+    return self.name
 
 class Collection(models.Model):
   name = models.CharField(max_length=100)
@@ -42,6 +41,7 @@ class CustomUser(AbstractUser):
 
 class Book(models.Model):
   title = models.CharField(max_length=100)
+  cover = models.ImageField(upload_to='uploads/covers/')
   author = models.ForeignKey(Author, on_delete=models.CASCADE)
   editor = models.ForeignKey(Editor, on_delete=models.CASCADE)
   collection = models.ForeignKey(Collection, on_delete=models.CASCADE)

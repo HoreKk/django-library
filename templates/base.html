@@ -28,28 +28,34 @@
                 </li>
                 {% if user.library is not None %}
                   <li>
-                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'lib_book_list' %}">
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_book_list' %}">
                       Books
                     </a>
                   </li>
                   <li>
-                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'lib_author_list' %}">
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_author_list' %}">
                       Authors
                     </a>
                   </li>
                   <li>
-                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'lib_collection_list' %}">
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_collection_list' %}">
                       Collections
                     </a>
                   </li>
                   <li>
-                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'lib_editor_list' %}">
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_editor_list' %}">
                       Editors
                     </a>
                   </li>
                   <li>
-                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'lib_genre_list' %}">
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_genre_list' %}">
                       Genres
+                    </a>
+                  </li>
+                {% else %}
+                  <li>
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'book_list' %}">
+                      Books
                     </a>
                   </li>
                 {% endif %}

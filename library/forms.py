@@ -25,4 +25,4 @@ class NewUserForm(UserCreationForm):
 class BookForm(ModelForm):
 		class Meta:
 			model = Book
-			fields = ['title', 'author', 'editor', 'collection', 'genre', 'library']
+			fields = ['title', 'author', 'cover', 'editor', 'collection', 'genre', 'library']

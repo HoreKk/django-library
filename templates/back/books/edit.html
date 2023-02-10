@@ -5,7 +5,7 @@
 {% block content %}   
 
   <div class="mb-3">
-    <a href="{% url 'lib_book_list' %}" class="inline-block btn btn-secondary">
+    <a href="{% url 'bo_book_list' %}" class="inline-block btn btn-secondary">
       <svg
         class="h-5 w-5"
         xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@
   <h1 class="text-xl font-bold text-gray-900 mb-4">
     {{ form.instance.pk| yesno:"Edit , Create " }} Book
   </h1>
-  <form method="post">{% csrf_token %}
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
     {{ form | crispy }}
     <input type="submit" class="btn btn-primary mt-3" value="{{ form.instance.pk| yesno:"Update , Create " }}">
   </form>

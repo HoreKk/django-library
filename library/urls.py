@@ -1,4 +1,4 @@
-"""library URL Configuration
+"""borary URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -24,24 +26,30 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register_request, name="register"),
     path('', views.HomeView.as_view(), name='home'),
-    path('books', views.BookListView.as_view(), name='lib_book_list'),
-    path('book', views.BookCreateView.as_view(), name='lib_book_create'),
-    path('book/<slug:pk>', views.BookUpdateView.as_view(), name='lib_book_detail'),
-    path('book/<slug:pk>/delete', views.BookDeleteView.as_view(), name='lib_book_delete'),
-    path('authors', views.AuthorListView.as_view(), name='lib_author_list'),
-    path('author', views.AuthorCreateView.as_view(), name='lib_author_create'),
-    path('author/<slug:pk>', views.AuthorUpdateView.as_view(), name='lib_author_detail'),
-    path('author/<slug:pk>/delete', views.AuthorDeleteView.as_view(), name='lib_author_delete'),
-    path('editors', views.EditorListView.as_view(), name='lib_editor_list'),
-    path('editor', views.EditorCreateView.as_view(), name='lib_editor_create'),
-    path('editor/<slug:pk>', views.EditorUpdateView.as_view(), name='lib_editor_detail'),
-    path('editor/<slug:pk>/delete', views.EditorDeleteView.as_view(), name='lib_editor_delete'),
-    path('collections', views.CollectionListView.as_view(), name='lib_collection_list'),
-    path('collection', views.CollectionCreateView.as_view(), name='lib_collection_create'),
-    path('collection/<slug:pk>', views.CollectionUpdateView.as_view(), name='lib_collection_detail'),
-    path('collection/<slug:pk>/delete', views.CollectionDeleteView.as_view(), name='lib_collection_delete'),
-    path('genres', views.GenreListView.as_view(), name='lib_genre_list'),
-    path('genre', views.GenreCreateView.as_view(), name='lib_genre_create'),
-    path('genre/<slug:pk>', views.GenreUpdateView.as_view(), name='lib_genre_detail'),
-    path('genre/<slug:pk>/delete', views.GenreDeleteView.as_view(), name='lib_genre_delete'),
-]
+
+    ## Client Routes ##
+    path('books', views.BookListView.as_view(), name='book_list'),
+    path('book/<slug:pk>', views.BookDetailView.as_view(), name='book_detail'),
+    
+    ## Back Office Routes ##
+    path('bo/books', views.BoBookListView.as_view(), name='bo_book_list'),
+    path('bo/book', views.BoBookCreateView.as_view(), name='bo_book_create'),
+    path('bo/book/<slug:pk>', views.BoBookUpdateView.as_view(), name='bo_book_detail'),
+    path('bo/book/<slug:pk>/delete', views.BoBookDeleteView.as_view(), name='bo_book_delete'),
+    path('bo/authors', views.BoAuthorListView.as_view(), name='bo_author_list'),
+    path('bo/author', views.BoAuthorCreateView.as_view(), name='bo_author_create'),
+    path('bo/author/<slug:pk>', views.BoAuthorUpdateView.as_view(), name='bo_author_detail'),
+    path('bo/author/<slug:pk>/delete', views.BoAuthorDeleteView.as_view(), name='bo_author_delete'),
+    path('bo/editors', views.BoEditorListView.as_view(), name='bo_editor_list'),
+    path('bo/editor', views.BoEditorCreateView.as_view(), name='bo_editor_create'),
+    path('bo/editor/<slug:pk>', views.BoEditorUpdateView.as_view(), name='bo_editor_detail'),
+    path('bo/editor/<slug:pk>/delete', views.BoEditorDeleteView.as_view(), name='bo_editor_delete'),
+    path('bo/collections', views.BoCollectionListView.as_view(), name='bo_collection_list'),
+    path('bo/collection', views.BoCollectionCreateView.as_view(), name='bo_collection_create'),
+    path('bo/collection/<slug:pk>', views.BoCollectionUpdateView.as_view(), name='bo_collection_detail'),
+    path('bo/collection/<slug:pk>/delete', views.BoCollectionDeleteView.as_view(), name='bo_collection_delete'),
+    path('bo/genres', views.BoGenreListView.as_view(), name='bo_genre_list'),
+    path('bo/genre', views.BoGenreCreateView.as_view(), name='bo_genre_create'),
+    path('bo/genre/<slug:pk>', views.BoGenreUpdateView.as_view(), name='bo_genre_detail'),
+    path('bo/genre/<slug:pk>/delete', views.BoGenreDeleteView.as_view(), name='bo_genre_delete'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
