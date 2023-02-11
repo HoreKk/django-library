@@ -35,6 +35,21 @@ class BookListView(LoginRequiredMixin, ListView):
 	model = Book
 	template_name = 'client/book_list.html'
 
+	def get_queryset(self):
+		query = self.request.GET.get("q")
+		if query is not None and query != '':
+			object_list = Book.objects.filter(title__icontains=query)
+		else:
+			object_list = Book.objects.all()
+		return object_list
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		tmpQuery = self.request.GET.get("q")
+		if tmpQuery is not None:
+			context['query'] = tmpQuery
+		return context
+
 class BookDetailView(LoginRequiredMixin, DetailView):
 	model = Book
 	template_name = 'client/book_detail.html'
