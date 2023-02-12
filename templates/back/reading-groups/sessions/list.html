@@ -1,0 +1,67 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mb-3">
+  <a href="{% url 'bo_reading_group_list' %}" class="inline-block btn btn-secondary">
+    <svg
+      class="h-5 w-5"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M14 5l7 7m0 0l-7 7m7-7H3"
+        transform="rotate(180 12 12)"
+      />
+    </svg>
+  </a>
+</div>
+
+<h1 class="text-3xl font-bold">Session for "{{ reading_group.name }}"</h1>
+
+<div class="mt-6">
+  <a href="{% url 'bo_reading_group_session_create' reading_group.id %}" class="btn btn-primary">
+    Add session
+  </a>
+</div>
+
+<div class="mt-8 overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
+  <table class="min-w-full divide-y divide-gray-200 text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        {% for field in session_fields %}
+          {% if field != 'reading_group' %}
+            <th class="px-4 py-2 text-left font-medium text-gray-900">{{ field | capfirst }}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="px-4 py-2 text-left font-medium text-gray-900">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for session in object_list %}
+        <tr>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ session.id }}</th>
+          <td class="px-4 py-2 text-gray-700">{{ session.date }}</td>
+          <td class="flex gap-3 px-4 py-2 text-gray-700">
+            <a href="{% url 'bo_reading_group_session_detail' pk_reading_group=reading_group.id pk_session=session.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
+            <form method="POST" action="{% url 'bo_reading_group_session_delete' pk_reading_group=reading_group.id pk_session=session.id %}">
+              {% csrf_token %}
+              <button type="submit" class="text-sm font-medium text-red-600 hover:underline">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

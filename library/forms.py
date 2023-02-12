@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Session
 
 from django.forms import ModelForm
 from .models import Book
@@ -26,3 +27,11 @@ class BookForm(ModelForm):
 		class Meta:
 			model = Book
 			fields = ['title', 'author', 'cover', 'editor', 'collection', 'genre', 'library']
+
+class SessionForm(forms.ModelForm):
+    class Meta:
+        model = Session
+        fields = ['date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'})
+        }

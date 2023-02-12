@@ -1,11 +1,11 @@
 from django.shortcuts import  render, redirect
-from .forms import NewUserForm
+from .forms import NewUserForm, SessionForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from .models import Book, Library, Author, Editor, Collection, Genre
+from .models import Book, Library, Author, Editor, Collection, Genre, Reading_Group, Session
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -209,3 +209,90 @@ class BoGenreUpdateView(LoginRequiredMixin, UpdateView):
 class BoGenreDeleteView(LoginRequiredMixin, DeleteView):
 	model = Genre
 	success_url = reverse_lazy('bo_genre_list')
+
+
+# ReadingGroup CRUD
+class BoReadingGroupListView(UserPassesTestMixin, ListView):
+	model = Reading_Group
+	template_name = 'back/reading-groups/list.html'
+
+	def test_func(self):
+		return self.request.user.library is not None
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['reading_group_fields'] = [f.name for f in Reading_Group._meta.get_fields()]
+		return context
+
+class BoReadingGroupCreateView(LoginRequiredMixin, CreateView):
+	model = Reading_Group
+	fields = ['name']
+	template_name = 'back/reading-groups/edit.html'
+	success_url = '/bo/reading-groups'
+
+class BoReadingGroupUpdateView(LoginRequiredMixin, UpdateView):
+	model = Reading_Group
+	fields = ['name']
+	template_name = 'back/reading-groups/edit.html'
+	success_url = '/bo/reading-groups'
+
+
+class BoReadingGroupDeleteView(LoginRequiredMixin, DeleteView):
+	model = Reading_Group
+	success_url = reverse_lazy('bo_reading_group_list')
+
+
+# ReadingGroup Sessions CRUD
+class BoReadingGroupSessionsView(LoginRequiredMixin, ListView):
+	model = Session
+	fields = ['date']
+	template_name = 'back/reading-groups/sessions/list.html'
+	
+	def get_queryset(self):
+		return Session.objects.filter(reading_group=self.kwargs['pk_reading_group'])
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['session_fields'] = [f.name for f in Session._meta.get_fields()]
+		context['reading_group'] = Reading_Group.objects.get(id=self.kwargs['pk_reading_group'])
+		return context
+
+class BoReadingGroupSessionCreateView(LoginRequiredMixin, CreateView):
+	form_class = SessionForm
+	template_name = 'back/reading-groups/sessions/edit.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['reading_group'] = Reading_Group.objects.get(id=self.kwargs['pk_reading_group'])
+		return context
+
+	def form_valid(self, form):
+		reading_group = get_object_or_404(Reading_Group, id=self.kwargs['pk_reading_group'])
+		form.instance.reading_group = reading_group
+		return super(BoReadingGroupSessionCreateView, self).form_valid(form)
+
+	def get_success_url(self) -> str:
+		return reverse_lazy('bo_reading_group_session_list', kwargs={'pk_reading_group': self.kwargs['pk_reading_group'] })
+
+class BoReadingGroupSessionUpdateView(LoginRequiredMixin, UpdateView):
+	model = Session
+	slug_field = 'id'
+	slug_url_kwarg = 'pk_session'
+	fields = ['date']
+	template_name = 'back/reading-groups/sessions/edit.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['reading_group'] = Reading_Group.objects.get(id=self.kwargs['pk_reading_group'])
+		return context
+
+	def get_success_url(self) -> str:
+		return reverse_lazy('bo_reading_group_session_list', kwargs={'pk_reading_group': self.kwargs['pk_reading_group'] })
+
+class BoReadingGroupSessionDeleteView(LoginRequiredMixin, DeleteView):
+	model = Session
+	slug_field = 'id'
+	slug_url_kwarg = 'pk_session'
+
+	def get_success_url(self) -> str:
+		return reverse_lazy('bo_reading_group_session_list', kwargs={'pk_reading_group': self.kwargs['pk_reading_group'] })

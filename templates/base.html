@@ -28,6 +28,11 @@
                 </li>
                 {% if user.library is not None %}
                   <li>
+                    <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_reading_group_list' %}">
+                      Reading Groups
+                    </a>
+                  </li>
+                  <li>
                     <a class="text-gray-700 transition hover:text-indigo-600" href="{% url 'bo_book_list' %}">
                       Books
                     </a>

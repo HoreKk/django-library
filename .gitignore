@@ -3,3 +3,5 @@ sent_emails
 __pycache__/
 
 library/__pycache__/*
+
+uploads

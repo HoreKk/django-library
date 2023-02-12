@@ -1,0 +1,48 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold">Reading groups</h1>
+
+<div class="mt-6">
+  <a href="{% url 'bo_reading_group_create' %}" class="btn btn-primary">
+    Add reading group
+  </a>
+</div>
+
+<div class="mt-8 overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
+  <table class="min-w-full divide-y divide-gray-200 text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        {% for field in reading_group_fields %}
+          {% if field != 'book' and field != 'reading_group_user' and field != 'session' %}
+            <th class="px-4 py-2 text-left font-medium text-gray-900">{{ field | capfirst }}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="px-4 py-2 text-left font-medium text-gray-900">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for reading_group in object_list %}
+        <tr>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ reading_group.id }}</th>
+          <td class="px-4 py-2 text-gray-700">{{ reading_group.name }}</td>
+          <td class="flex gap-3 px-4 py-2 text-gray-700">
+            <a href="{% url 'bo_reading_group_session_list' reading_group.id %}" class="text-sm font-medium text-amber-600 hover:underline">Sessions</a>
+            <a href="{% url 'bo_reading_group_detail' reading_group.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
+            <form method="POST" action="{% url 'bo_reading_group_delete' reading_group.id %}">
+              {% csrf_token %}
+              <button type="submit" class="text-sm font-medium text-red-600 hover:underline">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
