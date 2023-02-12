@@ -158,7 +158,7 @@ class BoEditorListView(UserPassesTestMixin, ListView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		context['editor_fields'] = [f.name for f in Author._meta.get_fields()]
+		context['editor_fields'] = [f.name for f in Editor._meta.get_fields()]
 		return context
 
 class BoEditorCreateView(LoginRequiredMixin, CreateView):

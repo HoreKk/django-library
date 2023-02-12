@@ -14,3 +14,8 @@ python3 manage.py runserver
 ```
 python3 manage.py tailwind start
 ```
+
+#### Load the fixtures
+```
+python3 manage.py loaddata library/fixtures/dump.json
+```
