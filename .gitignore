@@ -2,6 +2,7 @@ sent_emails
 *.pyc
 __pycache__/
 
-library/__pycache__/*
+library/__pycache__/
+theme/__pycache__/
 
 uploads
