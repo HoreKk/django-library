@@ -37,7 +37,7 @@
     <thead class="bg-gray-100">
       <tr>
         {% for field in session_fields %}
-          {% if field != 'reading_group' %}
+          {% if field != 'reading_group' and field != 'reading_group_user' %}
             <th class="px-4 py-2 text-left font-medium text-gray-900">{{ field | capfirst }}</th>
           {% endif %}
         {% endfor %}
@@ -50,6 +50,7 @@
           <th class="px-4 py-2 text-gray-700 text-left">{{ session.id }}</th>
           <td class="px-4 py-2 text-gray-700">{{ session.date }}</td>
           <td class="flex gap-3 px-4 py-2 text-gray-700">
+            <a href="{% url 'bo_reading_group_session_user_list' pk_reading_group=reading_group.id pk_session=session.id %}" class="text-sm font-medium text-yellow-600 hover:underline">Users</a>
             <a href="{% url 'bo_reading_group_session_detail' pk_reading_group=reading_group.id pk_session=session.id %}" class="text-sm font-medium text-blue-600 hover:underline">Edit</a>
             <form method="POST" action="{% url 'bo_reading_group_session_delete' pk_reading_group=reading_group.id pk_session=session.id %}">
               {% csrf_token %}

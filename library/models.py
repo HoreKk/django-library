@@ -66,30 +66,32 @@ class Reading_Group(models.Model):
   def __str__(self):
     return self.name
 
-class Reading_Group_User(models.Model):
-
-  class Status(models.TextChoices):
-      PENDING = 'pending'
-      REJECTED = 'rejected'
-      ACCEPTED = 'accepted'
-
-  status = models.CharField(
-      max_length=10,
-      choices=Status.choices
-  )
-
-  user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-  reading_group = models.ForeignKey(Reading_Group, on_delete=models.CASCADE)
-  
-  def __str__(self):
-    return self.user.username + '-' + self.reading_group.name
-
 class Session(models.Model):
   date = models.DateField()
   reading_group = models.ForeignKey(Reading_Group, on_delete=models.CASCADE)
 
   def __str__(self):
-    return self.reading_group.name + '-' + self.date
+    session_id = str(self.id)
+    return session_id
+
+class Reading_Group_User(models.Model):
+
+  class Status(models.TextChoices):
+    PENDING = 'pending'
+    REJECTED = 'rejected'
+    ACCEPTED = 'accepted'
+
+  status = models.CharField(
+    max_length=10,
+    choices=Status.choices
+  )
+
+  user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+  session = models.ForeignKey(Session, on_delete=models.CASCADE)
+  
+  def __str__(self):
+    session_id = str(self.session.id)
+    return session_id + '-' + self.user.username
 
 admin.site.register(Author)
 admin.site.register(Editor)

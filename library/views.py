@@ -5,12 +5,13 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from .models import Book, Library, Author, Editor, Collection, Genre, Reading_Group, Session
+from .models import CustomUser, Book, Library, Author, Editor, Collection, Genre, Reading_Group, Session, Reading_Group_User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 
 def register_request(request):
@@ -53,6 +54,32 @@ class BookListView(LoginRequiredMixin, ListView):
 class BookDetailView(LoginRequiredMixin, DetailView):
 	model = Book
 	template_name = 'client/book_detail.html'
+
+class ReadingGroupListView(LoginRequiredMixin, ListView):
+	model = Reading_Group
+	template_name = 'client/reading_group_list.html'
+
+class ReadingGroupSessionListView(LoginRequiredMixin, ListView):
+	model = Session
+	template_name = 'client/reading_group_session_list.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		new_object_list = []
+		for session in context['object_list']:
+			reading_group_user = Reading_Group_User.objects.filter(session=session.id, user=self.request.user.id).first()
+			if reading_group_user is not None:
+				session.reading_group_user = reading_group_user
+			new_object_list.append(session)
+		context['object_list'] = new_object_list
+		return context
+
+class ReadingGroupSessionUserCreateView(LoginRequiredMixin, View):
+	def post(self, request, *args, **kwargs):
+		session = get_object_or_404(Session, id=self.kwargs['pk_session'])
+		user = get_object_or_404(CustomUser, id=self.kwargs['pk_user'])
+		Reading_Group_User(session=session, user=user, status= 'pending').save()
+		return HttpResponseRedirect(reverse_lazy('reading_group_session_list', kwargs={'pk': session.reading_group.id }))
 
 ## Back Office Views ##
 
@@ -255,7 +282,34 @@ class BoReadingGroupSessionsView(LoginRequiredMixin, ListView):
 		context = super().get_context_data(**kwargs)
 		context['session_fields'] = [f.name for f in Session._meta.get_fields()]
 		context['reading_group'] = Reading_Group.objects.get(id=self.kwargs['pk_reading_group'])
+		new_object_list = []
+		for session in context['object_list']:
+			reading_group_users = Reading_Group_User.objects.filter(session=session.id)
+			if reading_group_users is not None:
+				session.reading_group_users = reading_group_users
+			new_object_list.append(session)
+		context['object_list'] = new_object_list
 		return context
+
+class BoReadingGroupSessionUsersView(LoginRequiredMixin, ListView):
+	model = Reading_Group_User
+	fields = ['session', 'user', 'status']
+	template_name = 'back/reading-groups/sessions/users.html'
+	
+	def get_queryset(self):
+		return Reading_Group_User.objects.filter(session=self.kwargs['pk_session'])
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['reading_group_user_fields'] = [f.name for f in Reading_Group_User._meta.get_fields()]
+		return context
+
+class BoReadingGroupSessionUserUpdateView(LoginRequiredMixin, View):
+	def get(self, request, *args, **kwargs):
+		reading_group_user = get_object_or_404(Reading_Group_User, id=self.kwargs['pk_reading_group_user'])
+		reading_group_user.status = self.kwargs['status']
+		reading_group_user.save()
+		return HttpResponseRedirect(reverse_lazy('bo_reading_group_session_user_list', kwargs={'pk_reading_group': reading_group_user.session.reading_group.id, 'pk_session': reading_group_user.session.id }))
 
 class BoReadingGroupSessionCreateView(LoginRequiredMixin, CreateView):
 	form_class = SessionForm

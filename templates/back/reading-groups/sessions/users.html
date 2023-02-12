@@ -1,0 +1,59 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mb-3">
+  <a href="{% url 'bo_reading_group_list' %}" class="inline-block btn btn-secondary">
+    <svg
+      class="h-5 w-5"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M14 5l7 7m0 0l-7 7m7-7H3"
+        transform="rotate(180 12 12)"
+      />
+    </svg>
+  </a>
+</div>
+
+<h1 class="text-3xl font-bold">Reading Group User for "{{ object_list.0.session }}"</h1>
+
+<div class="mt-8 overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
+  <table class="min-w-full divide-y divide-gray-200 text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        {% for field in reading_group_user_fields %}
+          {% if field != 'session' %}
+            <th class="px-4 py-2 text-left font-medium text-gray-900">{{ field | capfirst }}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="px-4 py-2 text-left font-medium text-gray-900">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for reading_group_user in object_list %}
+        <tr>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ reading_group_user.id }}</th>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ reading_group_user.status }}</th>
+          <th class="px-4 py-2 text-gray-700 text-left">{{ reading_group_user.user }}</th>
+          <td class="flex gap-3 px-4 py-2 text-gray-700">
+            {% if reading_group_user.status == 'pending' %}
+              <a href="{% url 'bo_reading_group_session_user_update' pk_reading_group_user=reading_group_user.id status='accepted' %}" class="text-sm font-medium text-green-600 hover:underline">Accepté</a>  
+              <a href="{% url 'bo_reading_group_session_user_update' pk_reading_group_user=reading_group_user.id status='rejected' %}" class="text-sm font-medium text-red-600 hover:underline">Refusé</a>  
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

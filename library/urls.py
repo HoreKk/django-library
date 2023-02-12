@@ -30,6 +30,9 @@ urlpatterns = [
     ## Client Routes ##
     path('books', views.BookListView.as_view(), name='book_list'),
     path('book/<slug:pk>', views.BookDetailView.as_view(), name='book_detail'),
+    path('reading-groups', views.ReadingGroupListView.as_view(), name='reading_group_list'),
+    path('reading-group/<slug:pk>', views.ReadingGroupSessionListView.as_view(), name='reading_group_session_list'),
+    path('reading-group/<slug:pk_reading_group>/session/<slug:pk_session>/user/<slug:pk_user>', views.ReadingGroupSessionUserCreateView.as_view(), name='reading_group_session_user_add'),
     
     ## Back Office Routes ##
     path('bo/books', views.BoBookListView.as_view(), name='bo_book_list'),
@@ -60,4 +63,6 @@ urlpatterns = [
     path('bo/reading-group/<slug:pk_reading_group>/session', views.BoReadingGroupSessionCreateView.as_view(), name='bo_reading_group_session_create'),
     path('bo/reading-group/<slug:pk_reading_group>/session/<slug:pk_session>', views.BoReadingGroupSessionUpdateView.as_view(), name='bo_reading_group_session_detail'),
     path('bo/reading-group/<slug:pk_reading_group>/session/<slug:pk_session>/delete', views.BoReadingGroupSessionDeleteView.as_view(), name='bo_reading_group_session_delete'),
+    path('bo/reading-group/<slug:pk_reading_group>/session/<slug:pk_session>/users', views.BoReadingGroupSessionUsersView.as_view(), name='bo_reading_group_session_user_list'),
+    path('bo/reading-group-user/<slug:pk_reading_group_user>/status/<slug:status>', views.BoReadingGroupSessionUserUpdateView.as_view(), name='bo_reading_group_session_user_update'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
